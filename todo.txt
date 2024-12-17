@@ -1,1 +1,7 @@
-- make bridge between litehtml and quickjs
+x (A) import quicks into main.cpp +CPP
+(A) add stuff in litehtml documetn_container to make it run +CPP @doc
+(A) import litehtml into main.cpp +CPP
+(A) add quickjs binding in main.cpp +CPP
+(A) create simple binding +JS @dom
+(A) run binding
+(A) 

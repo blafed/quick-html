@@ -1,3 +1,7 @@
-class Element {}
+interface Binding {
 
-class Document {}
+}
+
+class Element { }
+
+class Document { }
