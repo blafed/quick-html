@@ -1,10 +1,13 @@
 #include <iostream>
 #include <string>
 
-#include "../lib/quickjs/quickjs.h"
+// #include "lib/litehtml/containers/test/test_container.h"
+#include "litehtml.h"
 #include "main.h"
+#include "quickjs.h"
 
 using namespace std;
+using namespace litehtml;
 
 int main()
 {
@@ -26,15 +29,18 @@ int main()
     cout << "the string is" << ss << "\n";
     auto type = GetObjectType(context, result);
 
+    // auto container = new ();
+
+    // auto doc = document::createFromString("<html><head></head><body><p>stuff</p></body></html>");
+    // auto bestWidth = doc.get()->render(1000);
+
+    // cout << "best width" << bestWidth;
+
     // const auto ptr = (result.u.ptr);
     cout << "type iss " << type;
     printf("\n");
 
     return 0;
-}
-
-void define_dom_bindings()
-{
 }
 
 // JSValue JobjectToJSValue(JNIEnv *env, JSContext *ctx, jobject value)
