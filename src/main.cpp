@@ -1,4 +1,10 @@
+#define DEV
+
+#ifdef DEV
+#include "dev.cpp"
+#else
 #include "main.h"
+#endif
 
 int main()
 {

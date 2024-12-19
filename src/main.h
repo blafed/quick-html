@@ -1,4 +1,3 @@
-#define DEV
 
 #include "quickjs.h"
 #include <string>
@@ -55,10 +54,3 @@ int GetObjectType(JSContext *ctx, JSValue result)
 
     return TYPE_UNKNOWN;
 }
-
-
-
-
-#ifdef DEV
-#include "dev.cpp"
-#endif

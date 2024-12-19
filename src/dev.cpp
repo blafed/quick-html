@@ -1,7 +1,9 @@
+#include "main.h"
+
 void test_js(){
     auto context = _js;
 
-    const string str = "let s = 'hello world'; s;";
+    const string str = "let s = 'hello '; s;";
     str.length();
 
     auto result = JS_Eval(context, str.c_str(), str.length(), "", 0);
