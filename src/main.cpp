@@ -1,16 +1,14 @@
-#define DEV
-
+#include "main.h"
 #ifdef DEV
 #include "dev.cpp"
-#else
-#include "main.h"
 #endif
 
 int main()
 {
     _jsr = JS_NewRuntime();
     _js = JS_NewContext(_jsr);
-
-    test_js();
+    X11Display* d = new X11Display(512,1024);
+    d->run();
+    // test_js();
     return 0;
 }

@@ -1,4 +1,4 @@
-
+rm build/main
 # Check if 'clean' option is provided
 if [ "$1" = "clean" ]; then
   echo "Cleaning the build directory..."

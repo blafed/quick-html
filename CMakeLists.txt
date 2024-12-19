@@ -14,6 +14,9 @@ set(LH_DIR ${CMAKE_SOURCE_DIR}/lib/litehtml)
 set(LH_BUILD_DIR ${LH_DIR}/build)
 set(LH_LIB ${LH_BUILD_DIR}/liblitehtml.a)
 
+# Define directory for Canvas_ity
+set(CANVAS_ITY_DIR ${CMAKE_SOURCE_DIR}/lib/canvas_ity)
+
 # Step 1: Build QuickJS library
 add_custom_command(
     OUTPUT ${QJS_LIB}
@@ -49,8 +52,16 @@ add_executable(main ${CMAKE_SOURCE_DIR}/src/main.cpp)
 # Link the main executable with the static libraries
 add_dependencies(main quickjs litehtml)
 
-# Include directories for QuickJS and LiteHTML
-target_include_directories(main PRIVATE ${QJS_DIR} ${LH_DIR}/include)
+# Include directories for QuickJS, LiteHTML, and Canvas_ity
+target_include_directories(main PRIVATE 
+    ${QJS_DIR} 
+    ${LH_DIR}/include 
+    ${CANVAS_ITY_DIR}/src
+)
 
-# Link the required libraries (QuickJS and LiteHTML) to the main executable
-target_link_libraries(main PRIVATE ${QJS_LIB} ${LH_LIB})
+# Link the required libraries (QuickJS, LiteHTML, and X11) to the main executable
+find_package(X11 REQUIRED)
+target_link_libraries(main PRIVATE ${QJS_LIB} ${LH_LIB} ${X11_LIBRARIES})
+
+# Include X11 headers
+include_directories(${X11_INCLUDE_DIR})

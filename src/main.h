@@ -1,9 +1,19 @@
+#define DEV
+
 
 #include "quickjs.h"
 #include <string>
 #include "litehtml.h"
 #include <iostream>
 #include <string>
+
+#ifdef DEV
+#define CANVAS_ITY_IMPLEMENTATION
+#endif
+
+#include "canvas_ity.hpp"
+
+#define MAIN_H
 
 using namespace std;
 using namespace litehtml;
