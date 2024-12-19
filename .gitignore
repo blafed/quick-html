@@ -2,3 +2,4 @@
 *.a
 main
 js/dom.js
+.trash
