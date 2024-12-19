@@ -7,11 +7,24 @@ LH_DIR := lib/litehtml
 LH_BUILD_DIR := $(LH_DIR)/build
 LH_LIB := $(LH_BUILD_DIR)/liblitehtml.a
 
-MAIN_SRC := src/main.cpp
+EWS_DIR := src/dev/easywsclient
+EWS_SRC := $(EWS_DIR)/easywsclient.cpp
+EWS_OBJ := $(EWS_DIR)/easywsclient.o
+
+TEST_SRC :=
+TEST_OBJ :=
+
+MAIN_SRC := src/main.cpp $(EWS_DIR)/easywsclient.hpp
+MAIN_OBJ := src/main.o $(EWS_OBJ)
 MAIN_EXE := main
 
+# Compiler and flags
+CXX := g++
+CXXFLAGS := -std=c++17 -I$(QJS_DIR) -I$(LH_DIR)/include -Ilib/litehtml/containers/test -pthread
+LDFLAGS := -L$(OBJ_DIR) -L$(LH_BUILD_DIR) -lquickjs -llitehtml
+
 # Default target
-all: $(MAIN_EXE)
+all: $(MAIN_EXE) 
 
 # Step 1: Compile QuickJS to a static library
 $(QJS_LIB):
@@ -29,15 +42,25 @@ $(LH_LIB):
 	@mkdir -p $(LH_BUILD_DIR)
 	@cd $(LH_BUILD_DIR) && cmake .. && make
 
-# Step 3: Compile main.cpp into the main executable
-$(MAIN_EXE): $(MAIN_SRC) $(QJS_LIB) $(LH_LIB)
+# Step 3: Compile EasyWSClient implementation
+$(EWS_OBJ): $(EWS_SRC)
+	@echo "Compiling EasyWSClient implementation: $<..."
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Step 4: Compile main.cpp into an object file
+src/main.o: src/main.cpp
 	@echo "Compiling main.cpp..."
-	@g++ -std=c++17 $(MAIN_SRC) -I$(QJS_DIR) -I$(LH_DIR)/include -L$(OBJ_DIR) -L$(LH_BUILD_DIR) -lquickjs -llitehtml -o $(MAIN_EXE)
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Step 5: Link all object files into the main executable
+$(MAIN_EXE): $(MAIN_OBJ) $(QJS_LIB) $(LH_LIB)
+	@echo "Linking all object files into executable: $@..."
+	@$(CXX) $(MAIN_OBJ) $(CXXFLAGS) $(LDFLAGS) -o $@
 
 # Clean up build artifacts
 clean:
 	@echo "Cleaning up..."
-	@rm -f $(MAIN_EXE)
+	@rm -f $(MAIN_EXE) $(MAIN_OBJ) $(TEST_OBJ)
 	@rm -rf $(OBJ_DIR)
 	@rm -rf $(LH_BUILD_DIR)
 

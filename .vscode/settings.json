@@ -64,6 +64,6 @@
     "typeinfo": "cpp"
   },
   "explorer.excludeGitIgnore": false,
-  "C_Cpp.formatting": "",
+  "C_Cpp.formatting": "disabled",
   "C_Cpp.clang_format_style": "{BasedOnStyle: Microsoft, AllowShortIfStatementsOnASingleLine: AllIfsAndElse, AccessModifierOffset: 0, AlignArrayOfStructures: Left}"
 }

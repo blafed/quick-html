@@ -1,7 +1,10 @@
 x (A) import quicks into main.cpp +CPP
-(B) add stuff in litehtml documetn_container to make it run +CPP @doc
+(A) add stuff in litehtml documetn_container to make it run +CPP @doc
 x (A) import litehtml into main.cpp +CPP
 (A) add quickjs binding in main.cpp +CPP
 (A) create simple binding +JS @dom
 (A) run binding
 (A) 
+x (A+) test environemnt using chrome and websocket @DEV +CPP
+
+(A) refactor step

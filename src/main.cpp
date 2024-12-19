@@ -5,9 +5,16 @@
 #include "litehtml.h"
 #include "main.h"
 #include "quickjs.h"
+// #include "docc.h"
+// #include "test_container.h"
 
 using namespace std;
 using namespace litehtml;
+
+uintptr_t screen_canvas;
+binding* m_binding;
+JSRuntime* runtime;
+
 
 int main()
 {
@@ -29,9 +36,24 @@ int main()
     cout << "the string is" << ss << "\n";
     auto type = GetObjectType(context, result);
 
+    ws_start();
+    return 0;
+    
+
+
+
+        scanf("you");
+        ws_send("hooooooooooooo");
+        ws_send("hooooooooooooo");
+        ws_send("hooooooooooooo");
+        scanf("you");
+    // m_binding = new binding();
+    // init_binding(context, m_binding);
+
     // auto container = new ();
 
-    // auto doc = document::createFromString("<html><head></head><body><p>stuff</p></body></html>");
+    // auto container = new my_container(100, 200, "/");
+    // auto doc = document::createFromString("<html><<body><p>stuff</p></body></html>", container);
     // auto bestWidth = doc.get()->render(1000);
 
     // cout << "best width" << bestWidth;
@@ -40,8 +62,21 @@ int main()
     cout << "type iss " << type;
     printf("\n");
 
+
     return 0;
 }
+
+
+
+// void init_binding(const JSContext* context, binding& binding){
+//     binding.drawText_f = JS_Call()
+// }
+
+
+// void js_draw_text(JSContext* context, uintptr_t ptr){
+//     JS_Call(context, m_binding.drawText_f, )
+// }
+
 
 // JSValue JobjectToJSValue(JNIEnv *env, JSContext *ctx, jobject value)
 // {
