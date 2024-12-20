@@ -1,5 +1,5 @@
 rm build/main
-rm build/CMakeCache.txt
+# rm build/CMakeCache.txt
 
 # Check if 'clean' option is provided
 if [ "$1" = "clean" ]; then
@@ -13,7 +13,7 @@ mkdir -p build
 cd build
 
 # Run cmake, make, and the final executable
-cmake ..
+cmake -DTEST=ON .. 
 make
 ./main
 

@@ -1,4 +1,6 @@
 x (A) import quicks into main.cpp +CPP
+x link canvas_ty
+x verify canvas_ity does draw text
 (A) add stuff in litehtml documetn_container to make it run +CPP @doc
 x (A) import litehtml into main.cpp +CPP
 (A) add quickjs binding in main.cpp +CPP
@@ -7,4 +9,4 @@ x (A) import litehtml into main.cpp +CPP
 (A) 
 x (A+) test environemnt using chrome and websocket @DEV +CPP
 
-(A) refactor step
+x (A) refactor step
