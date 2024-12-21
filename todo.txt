@@ -1,0 +1,14 @@
+x (A) import quicks into main.cpp +CPP
+x link canvas_ty
+x verify canvas_ity does draw text
+(A) add stuff in litehtml documetn_container to make it run +CPP @doc
+- litehtml cmake infinite loop (local)
+- quickjs-android uses another cmake
+x (A) import litehtml into main.cpp +CPP
+(A) add quickjs binding in main.cpp +CPP
+(A) create simple binding +JS @dom
+(A) run binding
+(A) 
+x (A+) test environemnt using chrome and websocket @DEV +CPP
+
+x (A) refactor step

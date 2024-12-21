@@ -1,0 +1,21 @@
+rm -f build/main
+rm -f build/qhtml
+# rm build/CMakeCache.txt
+
+# Check if 'clean' option is provided
+if [ "$1" = "clean" ]; then
+  echo "Cleaning the build directory..."
+  rm -rf build
+  echo "Build directory cleaned."
+else 
+
+# Create the build directory and navigate into it
+mkdir -p build
+cd build
+
+# Run cmake, make, and the final executable
+cmake ..
+make
+./qhtml
+
+fi
