@@ -1,7 +1,6 @@
 #include "quickjs.h"
-
+#include "litehtml.h"
 int main()
 {
-    JS_NewRuntime();
     return 0;
 }
