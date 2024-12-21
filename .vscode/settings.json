@@ -1,8 +1,10 @@
 {
     "files.associations": {
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "system_error": "cpp",
+        "typeinfo": "cpp",
+        "cstddef": "cpp"
     },
-    "C_Cpp.formatting": "disabled",
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#2f7c47",
         "activityBar.background": "#2f7c47",

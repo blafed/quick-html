@@ -5,7 +5,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "canvas_ity.h"
+#include "canvas_ity.hpp"
 
 using namespace canvas_ity;
 using namespace std;
