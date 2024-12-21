@@ -1,7 +1,9 @@
 #include "quickjs.h"
 #include "litehtml.h"
 #include "display.cpp"
-#include "container/lodepng.h"
+#include "lodepng.h"
+#include "test.h"
+#include "canvas_ity.hpp"
 
 int main()
 {

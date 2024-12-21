@@ -25,6 +25,7 @@ set(CONT ${SRC}/container)
 
 set(EXE 
 ${CONT}/lodepng.cpp
+${CONT}/container.cpp
 # ${CONT}/Bitmap.cpp
 # ${CONT}/Font.cpp
 # ${CONT}/test_container.cpp
@@ -64,12 +65,12 @@ add_library(canvas_ity STATIC ${CITY})
 # target_sources(canvas_ity PRIVATE ${CITY})
 target_compile_features(canvas_ity PRIVATE cxx_std_17)
 set_target_properties(canvas_ity PROPERTIES LINKER_LANGUAGE CXX)
-target_compile_definitions(canvas_ity PUBLIC CANVAS_ITY_IMPLEMENTATION=1)
+# target_compile_definitions(canvas_ity PUBLIC CANVAS_ITY_IMPLEMENTATION=1)
 target_link_libraries(${PROJECT_NAME} PRIVATE canvas_ity)
 
 
 if(TEST)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CONT})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CONT} test)
 # Include X11 headers
 find_package(X11 REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${X11_LIBRARIES})
