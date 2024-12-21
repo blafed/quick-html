@@ -1,4 +1,13 @@
 #include "Bitmap.h"
+#include "canvas_ity.h"
+
+using namespace canvas_ity;
+
+
+string readfile(string filename);
+void draw_image(canvas &cvs, int x, int y, const Bitmap &bmp);
+bool set_font(canvas &cvs, const string &raw_font_data, int pixel_size);
+void set_color(canvas &cvs, brush_type type, color c);
 
 class Font : public font_metrics
 {

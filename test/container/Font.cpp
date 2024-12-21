@@ -1,25 +1,21 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Font.h"
-#include "canvas_ity.hpp"
+#include "canvas_ity.h"
+#include "lodepng.h"
 using namespace canvas_ity;
-string readfile(string filename);
-void draw_image(canvas& cvs, int x, int y, const Bitmap& bmp);
-bool set_font(canvas& cvs, const string& raw_font_data, int pixel_size);
-void set_color(canvas& cvs, brush_type type, color c);
 
 RasterFont::size_name RasterFont::installed_fonts[] =
-{
-	{ 12, "terminus-12px.yaff" },
-	{ 14, "terminus-14px.yaff" },
-	{ 16, "terminus-16px.yaff" },
-	{ 18, "terminus-18px.yaff" },
-	{ 20, "terminus-20px.yaff" },
-	{ 22, "terminus-22px.yaff" },
-	{ 24, "terminus-24px.yaff" },
-	{ 28, "terminus-28px.yaff" },
-	{ 32, "terminus-32px.yaff" },
-	{ 0, "" }
-};
+	{
+		{12, "terminus-12px.yaff"},
+		{14, "terminus-14px.yaff"},
+		{16, "terminus-16px.yaff"},
+		{18, "terminus-18px.yaff"},
+		{20, "terminus-20px.yaff"},
+		{22, "terminus-22px.yaff"},
+		{24, "terminus-24px.yaff"},
+		{28, "terminus-28px.yaff"},
+		{32, "terminus-32px.yaff"},
+		{0, ""}};
 
 string get_font_dir()
 {
@@ -53,7 +49,7 @@ RasterFont::RasterFont(int size, int weight)
 	load(get_font_dir() + name);
 }
 
-RasterFont* RasterFont::create(string name, int size, int weight)
+RasterFont *RasterFont::create(string name, int size, int weight)
 {
 	if (lowcase(name) == "terminus")
 		return new RasterFont(size, weight);
@@ -93,40 +89,52 @@ void RasterFont::load(string filename)
 	{
 		string line = lines[i];
 		trim(line);
-		if (line.empty() || line[0] == '#') continue; // skip empty lines and comments
+		if (line.empty() || line[0] == '#')
+			continue; // skip empty lines and comments
 
 		auto sep = line.find(':');
-		if (sep == string::npos) return; // line without ':' - error
+		if (sep == string::npos)
+			return; // line without ':' - error
 
-		auto key = line.substr(0, sep);   trim(key);
-		auto val = line.substr(sep + 1);  trim(val);
-		if (val.empty()) break; // end of header
+		auto key = line.substr(0, sep);
+		trim(key);
+		auto val = line.substr(sep + 1);
+		trim(val);
+		if (val.empty())
+			break; // end of header
 
-		if (key == "cell-size")    sscanf(val.c_str(), "%d %d", &width, &height);
-		else if (key == "ascent")  ascent = atoi(val.c_str());
-		else if (key == "descent") descent = atoi(val.c_str());
+		if (key == "cell-size")
+			sscanf(val.c_str(), "%d %d", &width, &height);
+		else if (key == "ascent")
+			ascent = atoi(val.c_str());
+		else if (key == "descent")
+			descent = atoi(val.c_str());
 	}
 
 	// parse glyphs
-	
+
 	// only u+NNNN: label is recognized, all others are skipped
-	auto parse_key = [&]() {
+	auto parse_key = [&]()
+	{
 		int ch = -1;
 		for (; i < (int)lines.size(); i++)
 		{
 			string line = lines[i];
 			trim(line);
-			if (line.empty()) continue;
-			if (line.find(':') == string::npos) break; // start of glyph data
+			if (line.empty())
+				continue;
+			if (line.find(':') == string::npos)
+				break; // start of glyph data
 			if (line.substr(0, 2) == "u+")
-				sscanf(line.c_str(), "u+%X:", (unsigned int*) &ch);
+				sscanf(line.c_str(), "u+%X:", (unsigned int *)&ch);
 		}
 		return ch;
 	};
-	
-	auto parse_glyph = [&](int ch) {
+
+	auto parse_glyph = [&](int ch)
+	{
 		int glyph_width = (int)trim(lines[i]).size();
-		Bitmap& glyph = glyphs[ch] = Bitmap(glyph_width, height, transparent);
+		Bitmap &glyph = glyphs[ch] = Bitmap(glyph_width, height, transparent);
 		for (int y = 0; i < (int)lines.size() && y < height; i++, y++)
 		{
 			string line = trim(lines[i]);
@@ -141,7 +149,8 @@ void RasterFont::load(string filename)
 	while (i < (int)lines.size())
 	{
 		int ch = parse_key();
-		if (ch < 0) break;
+		if (ch < 0)
+			break;
 		parse_glyph(ch);
 	}
 
@@ -152,15 +161,15 @@ int RasterFont::text_width(string text)
 {
 	utf8_to_utf32 utf32(text);
 	int width_ = 0;
-	for (const char32_t* p = utf32; *p; p++)
+	for (const char32_t *p = utf32; *p; p++)
 		width_ += get_glyph(*p, black).width;
 	return width_;
 }
 
-void RasterFont::draw_text(canvas& cvs, string text, color color, int x, int y)
+void RasterFont::draw_text(canvas &cvs, string text, color color, int x, int y)
 {
 	utf8_to_utf32 utf32(text);
-	for (const char32_t* p = utf32; *p; p++)
+	for (const char32_t *p = utf32; *p; p++)
 	{
 		Bitmap glyph = get_glyph(*p, color);
 		draw_image(cvs, x, y, glyph);
@@ -170,11 +179,10 @@ void RasterFont::draw_text(canvas& cvs, string text, color color, int x, int y)
 
 // keys must be in lowcase
 string_map OutlineFont::installed_fonts =
-{
-	{ "ahem", "ahem.ttf" }
-};
+	{
+		{"ahem", "ahem.ttf"}};
 
-OutlineFont* OutlineFont::create(string name, int size)
+OutlineFont *OutlineFont::create(string name, int size)
 {
 	lcase(name);
 
@@ -201,7 +209,7 @@ int OutlineFont::text_width(string text)
 	return (int)ceil(cvs.measure_text(text.c_str()));
 }
 
-void OutlineFont::draw_text(canvas& cvs, string text, color color, int x, int y)
+void OutlineFont::draw_text(canvas &cvs, string text, color color, int x, int y)
 {
 	set_font(cvs, data, size);
 	cvs.text_baseline = top;
@@ -209,10 +217,20 @@ void OutlineFont::draw_text(canvas& cvs, string text, color color, int x, int y)
 	cvs.fill_text(text.c_str(), (float)x, (float)y);
 }
 
-Font* Font::create(string name, int size, int weight)
+Font *Font::create(string name, int size, int weight)
 {
-	if (RasterFont* font = RasterFont::create(name, size, weight))
+	if (RasterFont *font = RasterFont::create(name, size, weight))
 		return font;
 
 	return OutlineFont::create(name, size);
+}
+
+string readfile(string filename)
+{
+	char *buffer;
+	unsigned long len;
+	lodepng_load_file((unsigned char **)&buffer, &len, filename.c_str());
+
+	string ret(buffer, len);
+	return ret;
 }
