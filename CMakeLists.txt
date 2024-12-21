@@ -25,9 +25,12 @@ set(CONT ${SRC}/container)
 
 set(EXE 
 ${CONT}/lodepng.cpp
-${CONT}/container.cpp
+${CONT}/test_container.cpp
+${CONT}/Font.cpp
+${CONT}/Bitmap.cpp
+# ${CONT}/container.cpp
 # ${CONT}/Bitmap.cpp
-# ${CONT}/Font.cpp
+${CONT}/Font.cpp
 # ${CONT}/test_container.cpp
 ${SRC}/test.cpp)
 

@@ -1,10 +1,10 @@
+#include "test.h"
+
 #include "test_container.h"
 #include "Font.h"
-#include "canvas_ity.h"
-#include "canvas_utils.h"
-#include "lodepng.h"
-
 using namespace canvas_ity;
+
+using size = litehtml::size;
 
 //
 //  canvas_ity adapters
@@ -370,4 +370,3 @@ void test_container::draw_conic_gradient(uint_ptr hdc, const background_layer &l
 {
 	draw_gradient(hdc, layer, gradient);
 }
-

@@ -2,6 +2,9 @@
 #include "litehtml.h"
 #include "display.cpp"
 #include "lodepng.h"
+#include "test_container.h"
+
+// KEEP THIS IN ORDER
 #include "test.h"
 #include "canvas_ity.hpp"
 

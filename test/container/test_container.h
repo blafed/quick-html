@@ -1,11 +1,14 @@
+#include "canvas_ity.hpp"
 #include <litehtml.h>
 #include "Bitmap.h"
-#include "canvas_utils.h"
 using namespace litehtml;
 using namespace canvas_ity;
 
 class test_container : public document_container
 {
+	using size = litehtml::size;
+	using byte = litehtml::byte;
+
 public:
 	int width;
 	int height;

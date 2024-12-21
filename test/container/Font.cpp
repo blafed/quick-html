@@ -1,8 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "Font.h"
-#include "canvas_ity.h"
-#include "lodepng.h"
 using namespace canvas_ity;
+string readfile(string filename);
+void draw_image(canvas &cvs, int x, int y, const Bitmap &bmp);
+bool set_font(canvas &cvs, const string &raw_font_data, int pixel_size);
+void set_color(canvas &cvs, brush_type type, color c);
 
 RasterFont::size_name RasterFont::installed_fonts[] =
 	{
@@ -223,14 +225,4 @@ Font *Font::create(string name, int size, int weight)
 		return font;
 
 	return OutlineFont::create(name, size);
-}
-
-string readfile(string filename)
-{
-	char *buffer;
-	unsigned long len;
-	lodepng_load_file((unsigned char **)&buffer, &len, filename.c_str());
-
-	string ret(buffer, len);
-	return ret;
 }

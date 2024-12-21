@@ -1,13 +1,21 @@
 #pragma once
+#include "canvas_ity.hpp"
 #include <litehtml.h>
 using namespace litehtml;
 using rect = position;
-namespace canvas_ity { class canvas; }
-using namespace canvas_ity;
+namespace canvas_ity
+{
+	class canvas;
+}
 
+using namespace canvas_ity;
+using size = litehtml::size;
+using byte = litehtml::byte;
 // color != web_color because sizeof(web_color) != 4
 struct color
 {
+	using size = litehtml::size;
+	using byte = litehtml::byte;
 	byte r, g, b, a;
 
 	color() : r(0), g(0), b(0), a(0) {}
@@ -17,14 +25,17 @@ struct color
 	bool operator==(color c) const { return r == c.r && g == c.g && b == c.b && a == c.a; }
 	bool operator!=(color c) const { return !(*this == c); }
 };
-const color white(255,255,255,255);
-const color black(0,0,0,255);
-const color transparent(0,0,0,0);
+const color white(255, 255, 255, 255);
+const color black(0, 0, 0, 255);
+const color transparent(0, 0, 0, 0);
 
 class Bitmap
 {
+	using size = litehtml::size;
+	using byte = litehtml::byte;
+
 public:
-	int width  = 0;
+	int width = 0;
 	int height = 0;
 	vector<color> data;
 
@@ -37,10 +48,10 @@ public:
 	{
 		load(filename);
 	}
-	Bitmap(canvas& canvas);
+	Bitmap(canvas &canvas);
 
-	bool operator==(const Bitmap& bmp) const { return width == bmp.width && height == bmp.height && data == bmp.data; }
-	bool operator!=(const Bitmap& bmp) const { return !(*this == bmp); }
+	bool operator==(const Bitmap &bmp) const { return width == bmp.width && height == bmp.height && data == bmp.data; }
+	bool operator!=(const Bitmap &bmp) const { return !(*this == bmp); }
 	operator bool() const { return width != 0 && height != 0; }
 
 	color get_pixel(int x, int y) const;
@@ -55,4 +66,6 @@ public:
 	void save(string filename);
 };
 
-byte max_color_diff(const Bitmap& a, const Bitmap& b);
+litehtml::byte max_color_diff(const Bitmap &a, const Bitmap &b);
+
+string readfile(string filename);

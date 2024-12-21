@@ -1,6 +1,5 @@
 #include "Bitmap.h"
 #include "lodepng.h"
-#include "canvas_ity.h"
 using namespace canvas_ity;
 
 Bitmap::Bitmap(canvas &canvas) : Bitmap(canvas.width(), canvas.height())
@@ -147,3 +146,13 @@ byte max_color_diff(const Bitmap &a, const Bitmap &b)
 	return (byte)diff;
 }
 
+string readfile(string str)
+{
+	char *buffer;
+	unsigned long len;
+	lodepng_load_file((unsigned char **)&buffer, &len, str.c_str());
+
+	string s(buffer, len);
+
+	return s;
+}
