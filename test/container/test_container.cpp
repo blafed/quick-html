@@ -122,7 +122,7 @@ void test_container::draw_text(uint_ptr hdc, const char *text, uint_ptr hFont, w
 
 int test_container::pt_to_px(int pt) const { return pt * 96 / 72; }
 int test_container::get_default_font_size() const { return 16; }
-const char *test_container::get_default_font_name() const { return "Terminus"; }
+const char *test_container::get_default_font_name() const { return "roboto"; }
 
 void test_container::draw_solid_fill(uint_ptr hdc, const background_layer &layer, const web_color &color)
 {

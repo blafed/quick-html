@@ -112,9 +112,11 @@ public:
         this->run(&canvas);
     }
 
-private:
+public:
     int width;
     int height;
+
+private:
     Display *display;
     Window window;
     GC gc;

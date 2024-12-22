@@ -8,6 +8,9 @@
 #include "test.h"
 #include "canvas_ity.hpp"
 
+using namespace litehtml;
+using namespace canvas_ity;
+
 int main()
 {
     unsigned char *buffer;
@@ -22,7 +25,19 @@ int main()
     //     canvas.set_color(brush_type::fill_style, 1, 1, 1, 1);
     // canvas.fill_rectangle(0, 0, 100, 100);
 
-    d->canvas.fill_text("Hello, World!", 10, 10);
+    test_container *test = new test_container(500, 1000, "");
+
+    litehtml::estring html = readfile("res/d.html");
+    document::ptr doc = document::createFromString(html, test);
+
+    position clip = {0, 0, d->width, d->height};
+    auto bestWidth = doc.get()->render(d->width, render_type::render_all);
+    if (bestWidth != d->width)
+        doc.get()->render(bestWidth, render_type::render_all);
+
+    doc->draw((uint_ptr)&d->canvas, 0, 0, &clip);
+
+    // d->canvas.fill_text("Hello, World!", 10, 10);
     d->run();
     return 0;
 }

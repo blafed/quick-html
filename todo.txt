@@ -1,8 +1,8 @@
 x (A) import quicks into main.cpp +CPP
 x link canvas_ty
 x verify canvas_ity does draw text
-(A) add stuff in litehtml documetn_container to make it run +CPP @doc
-- litehtml cmake infinite loop (local)
+x (A) add stuff in litehtml documetn_container to make it run +CPP @doc
+x - litehtml cmake infinite loop (local)
 - quickjs-android uses another cmake
 x (A) import litehtml into main.cpp +CPP
 (A) add quickjs binding in main.cpp +CPP
