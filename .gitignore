@@ -3,3 +3,4 @@ lib/quickjs/doc
 lib/quickjs/examples
 lib/quickjs/tests
 build
+test/res/dom.js

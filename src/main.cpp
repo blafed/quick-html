@@ -32,6 +32,32 @@ struct el_data
     uint32_t id;
     element::ptr *el;
 };
+
+namespace litehtml
+{
+    element::ptr query_selector(const element::ptr &parent, const css_selector &selector, bool apply_pseudo = true, bool *is_pseudo = nullptr)
+    {
+        for (auto &el : parent->children())
+        {
+            int res = el->select(selector, apply_pseudo);
+            if (res != select_no_match)
+            {
+                if (is_pseudo)
+                {
+                    if (res & select_match_pseudo_class)
+                        *is_pseudo = true;
+                    else
+                        *is_pseudo = false;
+                }
+                return el;
+            }
+            auto found = query_selector(el, selector, apply_pseudo, is_pseudo);
+            if (found.get() != nullptr)
+                return found;
+        }
+        return nullptr;
+    }
+}
 namespace binding
 {
     JSValue new_pointer(JSContext *ctx, uintptr_t ptr)
@@ -92,6 +118,40 @@ namespace binding
         return JS_NewString(ctx, val);
     }
 
+    JSValue set_element_attr(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+    {
+        auto el = get_element(ctx, argv[0]);
+        const char *attr = JS_ToCString(ctx, argv[1]);
+        const char *val = JS_ToCString(ctx, argv[2]);
+        el->set_attr(attr, val);
+        JS_FreeCString(ctx, attr);
+        JS_FreeCString(ctx, val);
+        return JS_UNDEFINED;
+    }
+
+    JSValue append_child(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+    {
+        auto el = get_element(ctx, argv[0]);
+        auto child = get_element(ctx, argv[1]);
+        el->appendChild(child);
+        return JS_UNDEFINED;
+    }
+
+    JSValue get_body(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+    {
+        const element::ptr body1;
+        css_selector selector;
+        selector.parse("body", no_quirks_mode);
+        auto body = query_selector(doc->root(), selector);
+        cout << "body " << body->tag() << '\n';
+        // return new_element(ctx, doc->root());
+        if (body.get() == nullptr)
+        {
+            return JS_NULL;
+        }
+        return new_element(ctx, body);
+    }
+
     void init_bindings(JSContext *ctx, document::ptr doc)
     {
         binding::doc = doc;
@@ -100,5 +160,8 @@ namespace binding
 
         new_function(ctx, obj, "create_element", create_element);
         new_function(ctx, obj, "get_element_attr", get_element_attr);
+        new_function(ctx, obj, "set_element_attr", set_element_attr);
+        new_function(ctx, obj, "append_child", append_child);
+        new_function(ctx, obj, "get_body", get_body);
     }
 }

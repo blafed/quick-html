@@ -1,13 +1,25 @@
-type Eid = number;
+var __document: Document = Document();
+var binding: Binding
+var window = Window(__document);
+
+type Eid = ArrayBuffer;
+
 
 //CPP binding
 interface Binding {
-    create_element(tag: string): Eid;
+    create_element(tag: string): Eid; u
     get_element_by_id(id: string, nodeId: Eid): Eid;
     get_elements_by_tag(tag: string, nodeId: Eid): Eid[];
     get_element_attr(id: Eid, name: string): string | null;
-    set_element_attr(id: Eid, name: string, value: string): void;
+    set_element_attr(id: Eid, name: string, vale: string): void;
     append_child(parent_id: Eid, child_id: Eid): void;
+    element_tagName(id: Eid): string;
+
+    window_width(): number;
+    window_height(): number;
+
+    document_body(): Eid;
+    document_head(): Eid;
 
     // get_element_id(id: TagId): Element;
     // set_element_id(id: TagId, element: Element): void;
@@ -29,16 +41,20 @@ interface Node {
 }
 interface Document extends Node {
     createElement(tag: string): Element;
-
     body: Element;
     head: Element;
+}
+interface Window {
+    readonly innerWidth: number;
+    readonly innerHeight: number;
+    readonly document: Document;
 
 }
 interface Element extends Node {
+    readonly _id: Eid;
     readonly tagName: string;
     id: string;
-    innerHTML: string;
-    appendChild(child: Element): void;
+    // innerHTML: string;
     removeChild(child: Element): void;
     setAttribute(name: string, value: string): void;
     getAttribute(name: string): string;
@@ -51,4 +67,36 @@ interface Canvas { }
 interface Window { }
 
 function Document(): Document {
+    let _head = binding.document_head();
+    let _body = binding.document_body();
+
+    let __headObj = Element(_head);
+    let __bodyObj = Element(_body);
+
+    return {
+        head: Element(_head),
+    }
+}
+
+function Window(): Window {
+    return {
+        get innerWidth() { return binding.window_width(); },
+        get innerHeight() { return binding.window_height(); },
+        get document() { return __document },
+    }
+}
+
+function Element(eid: Eid) {
+    return {
+        _id: eid,
+        get tagName() { return binding.element_tagName(eid); },
+        set id(id: string) { binding.set_element_attr(eid, "id", id); },
+        get id() { return binding.get_element_attr(eid, "id") ?? ''; },
+        get innerHTML() { return binding.element_innerHTML(eid); },
+        set innerHTML(html: string) { binding.set_element_innerHTML(eid, html); },
+        removeChild(child: Element) { binding.remove_child(eid, child._id); },
+        setAttribute(name: string, value: string) { binding.set_element_attr(eid, name, value); },
+        getAttribute(name: string) { return binding.get_element_attr(eid, name); },
+        get style() { return CSSStyleDeclaration(eid); },
+    }
 }

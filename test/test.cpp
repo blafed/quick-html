@@ -43,10 +43,11 @@ void js_test()
     binding::new_function(js, JS_UNDEFINED, "logs", log);
 
     // const char *eval = "logs('Hello, World!');";
-    const char *eval = "let newEl = binding.create_element('div'); logs(newEl);let el = binding.get_element_attr(newEl, 'id'); logs(el)";
+    const char *eval = "let newEl = binding.create_element('div'); logs(newEl);"
+                       "binding.set_element_attr(newEl, 'id', 'test123');"
+                       "let el = binding.get_element_attr(newEl, 'id'); logs(el); binding.get_body()";
     ;
     auto v = JS_Eval(js, eval, strlen(eval), "", 0);
-
     cout << "eval " << v.tag << '\n';
     // cout << "eval " << JS_ToCString(js, v) << '\n';
 
