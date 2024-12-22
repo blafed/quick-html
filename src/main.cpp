@@ -27,31 +27,43 @@ using namespace litehtml;
 //     return obj;
 // }
 
-JSValue pass_pointer_to_js(JSContext *ctx, uintptr_t ptr)
+struct el_data
 {
-    JSValue buffer = JS_NewArrayBuffer(ctx, sizeof(ptr));
-    uint8_t *data = JS_GetArrayBuffer(ctx, nullptr, buffer);
-    std::memcpy(data, &ptr, sizeof(ptr)); // Copy pointer to the buffer
-    return buffer;
-}
-
-uintptr_t parse_pointer_from_js(JSContext *ctx, JSValueConst js_buffer)
-{
-    size_t size;
-    uint8_t *data = JS_GetArrayBuffer(ctx, &size, js_buffer);
-    if (size != sizeof(uintptr_t))
-    {
-        // Error: Invalid buffer size
-        return 0;
-    }
-
-    uintptr_t ptr;
-    std::memcpy(&ptr, data, sizeof(ptr)); // Reconstruct the pointer
-    return ptr;
-}
-
+    uint32_t id;
+    element::ptr *el;
+};
 namespace binding
 {
+    JSValue new_pointer(JSContext *ctx, uintptr_t ptr)
+    {
+        char *buffer = new char[sizeof(ptr)];
+        std::memcpy(buffer, &ptr, sizeof(ptr));
+
+        JSValue js_buffer = JS_NewArrayBuffer(ctx, reinterpret_cast<uint8_t *>(buffer), sizeof(ptr), [](JSRuntime *rt, void *opaque, void *ptr)
+                                              { delete[] static_cast<char *>(ptr); }, nullptr, false);
+        return js_buffer;
+    }
+
+    uintptr_t get_pointer(JSContext *ctx, JSValueConst js_buffer)
+    {
+        uint_ptr size;
+        uint8_t *data = JS_GetArrayBuffer(ctx, &size, js_buffer);
+        return *reinterpret_cast<uintptr_t *>(data);
+    }
+
+    element::ptr get_element(JSContext *ctx, const JSValue &val)
+    {
+        auto ptr = get_pointer(ctx, val);
+        auto raw_pointer = reinterpret_cast<element::ptr *>(ptr);
+        return *raw_pointer;
+    }
+
+    JSValue new_element(JSContext *ctx, const element::ptr &el)
+    {
+        auto ptr = reinterpret_cast<uintptr_t>(new element::ptr(el));
+        return new_pointer(ctx, ptr);
+    }
+
     document::ptr doc;
 
     JSValue new_function(JSContext *ctx, JSValue obj, const char *name, JSCFunction *func)
@@ -62,23 +74,21 @@ namespace binding
 
     JSValue create_element(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
     {
-        JSValue vTag = JS_GetPropertyStr(ctx, argv[0], "tag");
-        const char *tag = JS_ToCString(ctx, vTag);
-        const string_map attrs;
-        litehtml::element::ptr el = doc->create_element(tag, attrs);
-
+        const char *tag = JS_ToCString(ctx, argv[0]);
+        string_map attrs;
+        auto el = doc->create_element(tag, attrs);
         JS_FreeCString(ctx, tag);
 
-        return JS_NewInt64(ctx, reinterpret_cast<uintptr_t>(el.get()));
+        return new_element(ctx, el);
     }
     JSValue get_element_attr(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
     {
-        JSValue vEl = JS_GetPropertyStr(ctx, argv[0], "el");
-        element *el = reinterpret_cast<element *>(JS_VALUE_GET_INT(vEl));
-        JSValue vAttr = JS_GetPropertyStr(ctx, argv[0], "attr");
-        const char *attr = JS_ToCString(ctx, vAttr);
+        auto el = get_element(ctx, argv[0]);
+        const char *attr = JS_ToCString(ctx, argv[1]);
         const char *val = el->get_attr(attr);
         JS_FreeCString(ctx, attr);
+        if (val == nullptr || strlen(val) == 0)
+            return JS_NULL;
         return JS_NewString(ctx, val);
     }
 

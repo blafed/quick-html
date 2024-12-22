@@ -1,0 +1,1 @@
+void document_create_element(struct document *doc, const char *tag_name, struct element **out);
