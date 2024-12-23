@@ -3,12 +3,14 @@ x link canvas_ty
 x verify canvas_ity does draw text
 x (A) add stuff in litehtml documetn_container to make it run +CPP @doc
 x - litehtml cmake infinite loop (local)
-- quickjs-android uses another cmake
 x (A) import litehtml into main.cpp +CPP
-(A) add quickjs binding in main.cpp +CPP
-(A) create simple binding +JS @dom
-(A) run binding
-(A) 
+x (A) add quickjs binding in main.cpp +CPP
+x (A) create simple binding +JS @dom
+x (A) run binding
 x (A+) test environemnt using chrome and websocket @DEV +CPP
-
 x (A) refactor step
+x - debugger
+- run basic el_script
+- create a dom-like tree in JS
+- make bindings
+- quickjs-android uses another cmake

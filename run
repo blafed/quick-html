@@ -10,10 +10,10 @@ if [ "$1" = "clean" ]; then
 else 
 
 # compile ts
-cd ts
-tsc --outFile ../test/res/dom.js
+cd src/ts
+tsc --outFile ../../test/res/dom.js
 
-cd ..
+cd ../..
 
 # Create the build directory and navigate into it
 mkdir -p build

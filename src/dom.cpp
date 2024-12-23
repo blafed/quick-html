@@ -205,28 +205,7 @@ namespace dom
             // "\"use strict\";\n1+2";
             read_resfile("dom.js", &len);
 
-        // char *safe = new char[len];
-        // memcpy(safe, buffer, len);
-
-        // string str(buffer);
-        // int any = false;
-        // for (int i = 0; i < len; i++)
-        // {
-        //     if (buffer[i] != word[i])
-        //         any = true;
-        //     cout << "char at " << i << " is " << buffer[i] << " EQUALS =" << (buffer[i] == word[i]) << '\n';
-        // }
-        // cout << "ANY " << any << '\n'
-        //      << "LEN " << strlen(word) << " LEN2 " << strlen(buffer) << '\n';
-        // cout << buffer;
         JSValue v = JS_Eval(ctx, buffer, len, "", 0);
-
-        // char *eval = "log('hehe')";
-
-        // auto v = JS_Eval(ctx, eval, strlen(eval), "", 0);
-
-        // cout << "VALUE IS " << v.tag << " len " << len << '\n';
-
         return v;
     }
 
