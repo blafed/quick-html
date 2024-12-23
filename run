@@ -20,7 +20,7 @@ mkdir -p build
 cd build
 
 # Run cmake, make, and the final executable
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=DEBUG ..
 make
 ./qhtml
 
