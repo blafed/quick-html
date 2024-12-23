@@ -1,3 +1,5 @@
+// var log: (msg: string) => void
+
 var __document: Document = Document();
 var binding: Binding
 var window = Window(__document);
@@ -7,7 +9,7 @@ type Eid = ArrayBuffer;
 
 //CPP binding
 interface Binding {
-    create_element(tag: string): Eid; u
+    create_element(tag: string): Eid;
     get_element_by_id(id: string, nodeId: Eid): Eid;
     get_elements_by_tag(tag: string, nodeId: Eid): Eid[];
     get_element_attr(id: Eid, name: string): string | null;
@@ -18,8 +20,8 @@ interface Binding {
     window_width(): number;
     window_height(): number;
 
-    document_body(): Eid;
-    document_head(): Eid;
+    document_body(): Eid | null;
+    document_head(): Eid | null;
 
     // get_element_id(id: TagId): Element;
     // set_element_id(id: TagId, element: Element): void;
@@ -41,8 +43,8 @@ interface Node {
 }
 interface Document extends Node {
     createElement(tag: string): Element;
-    body: Element;
-    head: Element;
+    readonly body: Element;
+    readonly head: Element;
 }
 interface Window {
     readonly innerWidth: number;
@@ -55,48 +57,52 @@ interface Element extends Node {
     readonly tagName: string;
     id: string;
     // innerHTML: string;
-    removeChild(child: Element): void;
+    // removeChild(child: Element): void;
     setAttribute(name: string, value: string): void;
     getAttribute(name: string): string;
-    style: CSSStyleDeclaration;
+    // style: CSSStyleDeclaration;
 }
 interface CSSStyleDeclaration {
     [key: string]: string;
 }
 interface Canvas { }
-interface Window { }
+
 
 function Document(): Document {
     let _head = binding.document_head();
     let _body = binding.document_body();
 
-    let __headObj = Element(_head);
-    let __bodyObj = Element(_body);
+    let __headObj: Element = Element(_head);
+    let __bodyObj: Element = Element(_body);
 
     return {
-        head: Element(_head),
+        get head() { return __headObj; },
+        get body() { return __bodyObj; },
     }
 }
 
-function Window(): Window {
+function Window(d: Document): Window {
     return {
         get innerWidth() { return binding.window_width(); },
         get innerHeight() { return binding.window_height(); },
-        get document() { return __document },
+        get document() { return d },
     }
 }
 
-function Element(eid: Eid) {
+function Element(eid: Eid): Element {
     return {
         _id: eid,
         get tagName() { return binding.element_tagName(eid); },
         set id(id: string) { binding.set_element_attr(eid, "id", id); },
         get id() { return binding.get_element_attr(eid, "id") ?? ''; },
-        get innerHTML() { return binding.element_innerHTML(eid); },
-        set innerHTML(html: string) { binding.set_element_innerHTML(eid, html); },
-        removeChild(child: Element) { binding.remove_child(eid, child._id); },
+        // get innerHTML() { return binding.element_innerHTML(eid); },
+        // set innerHTML(html: string) { binding.set_element_innerHTML(eid, html); },
+        // removeChild(child: Element) { binding.remove_child(eid, child._id); },
         setAttribute(name: string, value: string) { binding.set_element_attr(eid, name, value); },
         getAttribute(name: string) { return binding.get_element_attr(eid, name); },
-        get style() { return CSSStyleDeclaration(eid); },
+        appendChild(child: Element) { binding.append_child(eid, child._id); },
+        // get style() { return CSSStyleDeclaration(eid); },
     }
 }
+
+log("head name " + window.document.body.getAttribute('style'))

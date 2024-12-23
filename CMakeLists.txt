@@ -14,9 +14,11 @@ set(LH ${CMAKE_SOURCE_DIR}/lib/litehtml)
 set(CITY ${CMAKE_SOURCE_DIR}/lib/canvas_ity.hpp)
 
 
+set(EXE src/dom.cpp)
+
 if(!TEST)
     set(SRC src)
-set(EXE ${SRC}/main.cpp)
+set(EXE ${EXE} ${SRC}/main.cpp)
 
 else()
 #test configuration
@@ -24,6 +26,7 @@ set(SRC test)
 set(CONT ${SRC}/container)
 
 set(EXE 
+${EXE}
 ${CONT}/lodepng.cpp
 ${CONT}/test_container.cpp
 ${CONT}/Font.cpp
@@ -51,6 +54,8 @@ add_custom_command(
     COMMENT "Building QuickJS static library"
     DEPENDS ${QJS_DIR}/Makefile
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 add_custom_target(quickjs ALL DEPENDS ${QJS_LIB})
 add_dependencies(${PROJECT_NAME} quickjs)

@@ -4,7 +4,8 @@
 #include "lodepng.h"
 #include "test_container.h"
 
-#include "../src/main.cpp"
+// #include "../src/main.cpp"
+#include "dom.h"
 
 // KEEP THIS IN ORDER
 #include "test.h"
@@ -39,17 +40,16 @@ JSValue log(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 
 void js_test()
 {
+    // binding::new_function(js, JS_UNDEFINED, "logs", log);
 
-    binding::new_function(js, JS_UNDEFINED, "logs", log);
-
-    // const char *eval = "logs('Hello, World!');";
-    const char *eval = "let newEl = binding.create_element('div'); logs(newEl);"
-                       "binding.set_element_attr(newEl, 'id', 'test123');"
-                       "let el = binding.get_element_attr(newEl, 'id'); logs(el); binding.get_body()";
-    ;
+    const char *eval = "log('Hello, World!'); ";
+    // const char *eval = "let newEl = binding.create_element('div'); logs(newEl);"
+    //                    "binding.set_element_attr(newEl, 'id', 'test123');"
+    //                    "let el = binding.get_element_attr(newEl, 'id'); logs(el); binding.get_body()";
+    // ;
+    // cout << "eval " << JS_ToCString(js, v) << '\n';
     auto v = JS_Eval(js, eval, strlen(eval), "", 0);
     cout << "eval " << v.tag << '\n';
-    // cout << "eval " << JS_ToCString(js, v) << '\n';
 
     // JS_Call(js, f, JS_UNDEFINED, 0, NULL);
 }
@@ -75,7 +75,8 @@ int main()
 
     litehtml::estring html = readfile("res/d.html");
     document::ptr doc = document::createFromString(html, test);
-    binding::init_bindings(js, doc);
+    JSValue jsv = dom::init_dom(js, doc);
+    cout << "JSV " << jsv.tag << '\n';
     js_test();
 
     position clip = {0, 0, d->width, d->height};
